@@ -10,6 +10,7 @@ output: html_notebook
 - Can we safely conclude that the cases worldwide are indeed spreading exponentially?
 - If the total growth is exponential, which countries have had the highest growth rate in terms of total cases? 
 - What is the average length of days it takes for the total number of COVID-19 cases to double?
+- Is there a correlation between deaths and cases
 
 <br/> 
 
@@ -19,11 +20,24 @@ rm(list = ls())
 
 library(DataComputing)
 library(lubridate)
+```
+
+### Inspeciton of Data
+```{r}
 data1 <- read.csv("data1Corona.csv")
+tail(data1)
+```
+```{r}
 data2 <- read.csv("full_data.csv")
+head(data2)
+```
+
+```{r}
 test <- data2 %>% group_by(date) %>%summarise(newCases = sum(new_cases),totalDeaths = sum(total_deaths) ,newDeaths = sum(new_deaths), totalCases = sum(total_cases)) %>% arrange(desc(date)) 
 test$date = as.character.Date(levels(test$date))[test$date]
 graph <- test%>%mutate(daysSinceDecember312019 = as.numeric(floor((difftime(test$date, min(test$date))/86400 )) ))
+
+graph2 <- test%>%mutate(Last60Days = as.numeric(floor((difftime(test$date, min(test$date))/86400 )) )) %>% filter(Last60Days <= 60)
 ```
 
 
@@ -31,15 +45,16 @@ graph <- test%>%mutate(daysSinceDecember312019 = as.numeric(floor((difftime(test
 
 
 ```{r}
-ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "New Cases")) + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) +geom_point(aes(y = totalCases, color = "Total Cases"))
+ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "New Cases")) + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) +geom_point(aes(y = totalCases, color = "Total Cases")) + ggtitle("Cases vs Days", subtitle = "Since December*") + xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
 ```
 
 ```{r}
-ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "New Cases")) + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) 
+ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "Cases")) + geom_point(aes(y = newDeaths, color = "Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) + ggtitle("Cases vs Days", subtitle = "Since December*") + xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
 ```
 
 ```{r}
-ggplot(data = graph, aes(daysSinceDecember312019))  + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) 
+ggplot(data = graph, aes(daysSinceDecember312019))  + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) + ggtitle("Total Deaths", subtitle = "Since December*") +
+  xlab("Total Days of Pandemic") + ylab("New Deaths") + labs(color = "Legend" )
 
 ```
 
@@ -69,7 +84,7 @@ for (i in seq_along(totalCasesColumn)){
   }
 }
 
-print(paste("On average the amount of days for COVID-19 cases to double is:", floor(doubleList / n)))
+print(paste("On average the amount of days it takes for COVID-19 cases to double is:", floor(doubleList / n)))
 
 ```
 
