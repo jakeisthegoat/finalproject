@@ -1,0 +1,75 @@
+---
+title: "STAT 184 Final Project: Matt Bubb and Jacob Adams"
+output: html_notebook
+---
+## Research idea: Expondential Growth and the Novel Coronavirus
+
+#### Our final project is based around the concept of exponential growth when applied to the Novel Coronavirus (COVID-19). Although our main idea is not surrounded by a question, we have explored many sub-questions related to the topic in which we can draw trivial commonalities between the Coronavirus and exponential growth. Our research topics are listed below.  
+<br/>
+
+- Can we safely conclude that the cases worldwide are indeed spreading exponentially?
+- If the total growth is exponential, which countries have had the highest growth rate in terms of total cases? 
+- What is the average length of days it takes for the total number of COVID-19 cases to double?
+
+<br/> 
+
+
+```{r}
+rm(list = ls())
+
+library(DataComputing)
+library(lubridate)
+data1 <- read.csv("data1Corona.csv")
+data2 <- read.csv("full_data.csv")
+test <- data2 %>% group_by(date) %>%summarise(newCases = sum(new_cases),totalDeaths = sum(total_deaths) ,newDeaths = sum(new_deaths), totalCases = sum(total_cases)) %>% arrange(desc(date)) 
+test$date = as.character.Date(levels(test$date))[test$date]
+graph <- test%>%mutate(daysSinceDecember312019 = as.numeric(floor((difftime(test$date, min(test$date))/86400 )) ))
+```
+
+
+
+
+
+```{r}
+ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "New Cases")) + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) +geom_point(aes(y = totalCases, color = "Total Cases"))
+```
+
+```{r}
+ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "New Cases")) + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) 
+```
+
+```{r}
+ggplot(data = graph, aes(daysSinceDecember312019))  + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) 
+
+```
+
+
+
+Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, I have have code below showing our calcualtions. 
+
+
+```{r}
+
+
+
+
+totalCasesColumn <- rev(test$totalCases)
+total = 1
+countDays = 0
+doubleList = 0
+n = 0
+for (i in seq_along(totalCasesColumn)){
+  countDays = countDays + 1
+  checkForDouble = totalCasesColumn[i]
+  if(checkForDouble > total * 2  ){
+    total = checkForDouble
+    doubleList = doubleList + countDays
+    n = n + 1
+    countDays = 0
+  }
+}
+
+print(paste("On average the amount of days for COVID-19 cases to double is:", floor(doubleList / n)))
+
+```
+
