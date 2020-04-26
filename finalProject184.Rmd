@@ -4,30 +4,23 @@ output: html_notebook
 ---
 ## Research idea: Expondential Growth and the Novel Coronavirus
 
-#### Our final project is based around the concept of exponential growth when applied to the Novel Coronavirus (COVID-19). Although our main idea is not surrounded by a question, we have explored many sub-questions related to the topic in which we can draw trivial commonalities between the Coronavirus and exponential growth. Our research topics are listed below.  
+#### Our final project is based around the concept of exponential growth when applied to the Novel Coronavirus (COVID-19). Although our main idea is not surrounded by a question, we have explored many sub-questions related to the topic in which we can draw trivial commonalities between the Coronavirus and exponential growth. Our research topics are listed below in our figure listings.  
 
 <br>
-
-- If the total growth is exponential, which countries have had the highest growth rate in terms of total cases? 
-- What is the average length of days it takes for the total number of COVID-19 cases to double?
-
-- Is there a correlation between deaths and cases?
-- How much has the virus spread in the past 2 months in the United States?
-- Cases vs Testing in the U.S in the last 2 months.
 
 Figure 1: Can we safely conclude that the cases worldwide are indeed spreading exponentially?
 <br>
-Figure 2:
+Figure 2: This is an add on to Figure 2 to help the user visualize Figure 1 better. 
 <br>
-Figure 3:
+Figure 3: How does the total deaths from COVID-19 relate to the number of new deaths each day?
 <br>
-Figure 4:
+Figure 4: Since we are intersted in exponential growth, what is the average number of days it takes for the total number of COVID-19 cases to double in the world?
 <br>
-Figure 5:
+Figure 5: Which countries have the highest death rate per 100 people?
 <br>
-Figure 6:
+Figure 6: This is an addition to Figure 5, as we added another parameter to the problem. 
 <br>
-Figure 7:
+Figure 7: Has the number of tests grown exponentially with the number of confirmed cases?
 <br>
 Figure 8: Tests per confirmed cases.
 <br>
@@ -100,17 +93,21 @@ ggplot(data = graph, aes(daysSinceDecember312019)) +
   ggtitle("Cases vs Days", subtitle = "Since December*") + 
   xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
 ```
+This is a very nice overlay of new cases, new deaths, total cases, and total deaths. This also really shows the dramatic explosion of total cases towards the end of the graph which in turn, lessens the visual importance of the other three categories. Because of this, we made a second graph below of the same variables with the removal of total cases to show how the other three variables have transformed through time. 
+
 <br>
 
 ## Figure #2
 ```{r}
 ggplot(data = graph, aes(daysSinceDecember312019)) +  
-  geom_point(aes(y = newCases, color = "Cases")) + 
-  geom_point(aes(y = newDeaths, color = "Deaths")) +
+  geom_point(aes(y = newCases, color = "New Cases")) + 
+  geom_point(aes(y = newDeaths, color = "New Deaths")) +
   geom_point(aes(y = totalDeaths, color = "Total Deaths")) + 
   ggtitle("Cases vs Days", subtitle = "Since December*") + 
   xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
 ```
+As we can much better see here, the relationship of these three variables is much more clear. It is astonishing to see the exponential explosion of the total cases.  
+
 <br>
 
 ## Figure #3
@@ -121,10 +118,12 @@ ggplot(data = graph, aes(daysSinceDecember312019))  +
   ggtitle("Total Deaths", subtitle = "Since December*") +
   xlab("Total Days of Pandemic") + ylab("New Deaths") + labs(color = "Legend" )
 ```
+We can see here that the number of total deaths is, unfortunately, exponential. The number of new deaths also looks to be taking off in an exponential fashion. 
+
 <br>
 
 ## Figure #4
-Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, I have have code to see how fast the growing number of cases doubles. 
+Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, we have have code to see how fast the growing number of cases doubles. 
 
 ```{r}
 totalCasesColumn <- rev(casesDf$totalCases)
@@ -168,7 +167,7 @@ finalDeathRate <-
 finalDeathRate
 ```
 
-Now, this data set might seem odd, as the countries with the highest death rates are not in the news as being flooded with the virus. This is because this dataset is dealing with the phenomenon known as sample size bias. These countries do not have a lot of cases, so one death creates a massive death rate for that country. If we take that same r code as above and add a total_cases limit of at least 10,000 cases, this is what we end up with. 
+Now, this data set might seem odd, as the countries with the highest death rates per 100 people are not in the news as being flooded with the virus. This is because the previous code chunk is dealing with the phenomenon known as sample size bias. These countries do not have a lot of cases, so a small number of death creates a massive death rate for that country. If we take that same r code as above and add a total_cases limit of at least 10,000 cases, this is what we end up with. 
 <br>
 
 ##  Figure #6
@@ -202,13 +201,13 @@ Finally, below, we wanted to explore the growth rates while comparing the COVID-
 ggplot(data = graph2, aes(x = daysSinceDecember312019))  +
   geom_point(aes(y = as.integer(totalCases), color = "Total Cases"))  +
   geom_point(aes(y = as.integer(totalTests), color = "Total Tests")) +
-  ggtitle("Tests vs Cases") + 
+  ggtitle("Number of Documented Tests and Cases ") + 
   xlab("Total Days of Pandemic") + ylab("Number") + labs(color = "Legend" )
 ```
 This goes to show just how much testing has been done so far. Although these are failry large numbers, testing still needs to dramatically increase. 
 
 
-Below, we have another graph, this time a bar chart, showing the number of tests per confirmed cases worldwide. For simplicity we are showing the top ten countries. This is an interesting graphic as it shows that these countries have the fewest number of cases per test..
+
 <br>
 
 ## Figure #8
@@ -222,9 +221,10 @@ country <- data1 %>%
 
 ggplot(data = head(country, n = 10 ), aes(x = reorder(location, (as.integer(totalTests)/totalCases)), y = (as.integer(totalTests)/totalCases))) + 
   geom_bar(stat = "identity") +
-  ggtitle("Most Tests per Case") + 
+  ggtitle("Most Tests per Confirmed Case") + 
   xlab("Countries") + ylab("Percent of Testing Available") + labs(color = "Legend" )
 ```
+Here, we have another graph, this time a bar chart, showing the number of tests per confirmed cases worldwide. For simplicity we are showing the top ten countries. This is an interesting graphic as it shows that these countries have the fewest number of cases per test.
 <br>
 
 ```{r}
