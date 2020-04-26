@@ -212,7 +212,12 @@ Below, we have another graph, this time a bar chart, showing the number of tests
 ## Figure #8
 ```{r}
 #Tests per confirmed case
-country <- data1 %>% group_by(location) %>% summarise(totalCases = sum(total_cases), newCases = sum(new_cases),totalDeaths = sum(total_deaths), totalTests = sum(total_tests) ) %>% mutate(ratio = (as.integer(totalTests)/totalCases)) %>% arrange(desc(ratio))
+country <- data1 %>% 
+  group_by(location) %>% 
+  summarise(totalCases = sum(total_cases), newCases = sum(new_cases),totalDeaths = sum(total_deaths), totalTests = sum(total_tests) ) %>% 
+  mutate(ratio = (as.integer(totalTests)/totalCases)) %>% 
+  arrange(desc(ratio))
 
-ggplot(data = head(country, n = 10 ), aes(x = reorder(location, (as.integer(totalTests)/totalCases)), y = (as.integer(totalTests)/totalCases))) + geom_bar(stat = "identity")
+ggplot(data = head(country, n = 10 ), aes(x = reorder(location, (as.integer(totalTests)/totalCases)), y = (as.integer(totalTests)/totalCases))) + 
+  geom_bar(stat = "identity")
 ```
