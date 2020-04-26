@@ -10,7 +10,6 @@ output: html_notebook
 - Can we safely conclude that the cases worldwide are indeed spreading exponentially?
 - If the total growth is exponential, which countries have had the highest growth rate in terms of total cases? 
 - What is the average length of days it takes for the total number of COVID-19 cases to double?
-- Is there a correlation between deaths and cases
 
 <br/> 
 
@@ -20,24 +19,17 @@ rm(list = ls())
 
 library(DataComputing)
 library(lubridate)
-```
-
-### Inspeciton of Data
-```{r}
 data1 <- read.csv("data1Corona.csv")
-tail(data1)
-```
-```{r}
 data2 <- read.csv("full_data.csv")
-head(data2)
-```
-
-```{r}
 test <- data2 %>% group_by(date) %>%summarise(newCases = sum(new_cases),totalDeaths = sum(total_deaths) ,newDeaths = sum(new_deaths), totalCases = sum(total_cases)) %>% arrange(desc(date)) 
 test$date = as.character.Date(levels(test$date))[test$date]
+
+
+
+
+
 graph <- test%>%mutate(daysSinceDecember312019 = as.numeric(floor((difftime(test$date, min(test$date))/86400 )) ))
 
-graph2 <- test%>%mutate(Last60Days = as.numeric(floor((difftime(test$date, min(test$date))/86400 )) )) %>% filter(Last60Days <= 60)
 ```
 
 
@@ -45,22 +37,23 @@ graph2 <- test%>%mutate(Last60Days = as.numeric(floor((difftime(test$date, min(t
 
 
 ```{r}
-ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "New Cases")) + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) +geom_point(aes(y = totalCases, color = "Total Cases")) + ggtitle("Cases vs Days", subtitle = "Since December*") + xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
+ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "New Cases")) + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) +geom_point(aes(y = totalCases, color = "Total Cases"))
 ```
 
 ```{r}
-ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "Cases")) + geom_point(aes(y = newDeaths, color = "Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) + ggtitle("Cases vs Days", subtitle = "Since December*") + xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
+ggplot(data = graph, aes(daysSinceDecember312019)) +  geom_point(aes(y = newCases, color = "New Cases")) + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) 
 ```
 
 ```{r}
-ggplot(data = graph, aes(daysSinceDecember312019))  + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) + ggtitle("Total Deaths", subtitle = "Since December*") +
-  xlab("Total Days of Pandemic") + ylab("New Deaths") + labs(color = "Legend" )
+ggplot(data = graph, aes(daysSinceDecember312019))  + geom_point(aes(y = newDeaths, color = "New Deaths")) +geom_point(aes(y = totalDeaths, color = "Total Deaths")) 
 
 ```
 
 
 
-Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, I have have code below showing our calcualtions. 
+
+
+Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, I have have code to see how fast the growing number of cases doubles. 
 
 
 ```{r}
@@ -84,7 +77,32 @@ for (i in seq_along(totalCasesColumn)){
   }
 }
 
-print(paste("On average the amount of days it takes for COVID-19 cases to double is:", floor(doubleList / n)))
+print(paste("On average the amount of days for COVID-19 cases to double is:", floor(doubleList / n)))
 
 ```
 
+
+
+Since we have seen that these are exponential growths, we wanted to find the countries that are, unfortunatley, expierences the highest death rates from the Coronavirus. This data can be very useful in order to find which countries need the most help and start to analyze what they might they might be doing to have this death rate so high. Here, we calculated the highest death rate around the world
+
+```{r}
+data2test <- data2 %>% group_by(location) 
+data2test$date = as.character.Date(levels(data2test$date))[data2test$date]
+
+deathRate <- data2test %>% filter(date == "2020-04-05" ) %>% mutate(death_rate = (total_deaths/total_cases)*100)%>%arrange(desc(death_rate))
+finalDeathRate <- subset(deathRate, select = c(location, death_rate))
+finalDeathRate
+```
+
+Now, this data set might seem odd, as the countries with the highest death rates are not in the news as being flooded with the virus. This is because this dataset is dealing with the phenomenon known as sample size bias. These countries do not have a lot of cases, so one death creates a massive death rate for that country. If we take that same r code as above and add a total_cases limit of at least 10,000 cases, this is what we end up with. 
+
+```{r}
+data2test <- data2 %>% group_by(location) 
+data2test$date = as.character.Date(levels(data2test$date))[data2test$date]
+
+deathRate <- data2test %>% filter(date == "2020-04-05" & total_cases > 10000 ) %>% mutate(death_rate = (total_deaths/total_cases)*100)%>%arrange(desc(death_rate))
+finalDeathRate <- subset(deathRate, select = c(location, death_rate))
+finalDeathRate
+```
+
+This is a lot more accuracte to today's numbers (Again note that this data accounts for cases only up until April 5th, 2020. )
