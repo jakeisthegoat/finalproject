@@ -17,6 +17,7 @@ output: html_notebook
 ```{r}
 rm(list = ls())
 
+
 library(DataComputing)
 library(lubridate)
 data1 <- read.csv("data1Corona.csv")
