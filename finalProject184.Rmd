@@ -22,16 +22,33 @@ rm(list = ls())
 
 library(DataComputing)
 library(lubridate)
-data1 <- read.csv("data1Corona.csv")
+library(dplyr)
+data1 <- read.csv("owid-covid-data.csv")
 data2 <- read.csv("full_data.csv")
-test <- data2 %>% group_by(date) %>%summarise(newCases = sum(new_cases),totalDeaths = sum(total_deaths) ,newDeaths = sum(new_deaths), totalCases = sum(total_cases)) %>% arrange(desc(date)) 
-test$date = as.character.Date(levels(test$date))[test$date]
+
+#First data set -> used mostly for cases and deaths
+casesDf <- data2 %>% group_by(date) %>%summarise(newCases = sum(new_cases),totalDeaths = sum(total_deaths) ,newDeaths = sum(new_deaths), totalCases = sum(total_cases)) %>% arrange(desc(date)) 
+
+casesDf$date = as.character.Date(levels(casesDf$date))[casesDf$date]
+
+graph <- casesDf%>%mutate(daysSinceDecember312019 = as.numeric(floor((difftime(casesDf$date, min(casesDf$date))/86400 )) ))
+
+
+#Second data set -> used for testing and cases
+
+data1[is.na(data1)] <- 0
+
+testDf <- data1 %>% group_by(date) %>% summarise(totalCases = sum(total_cases), newCases = sum(new_cases),totalDeaths = sum(total_deaths), totalTests = sum(total_tests), newTests = sum(new_tests) )
+
+testDf$date = as.character.Date(levels(testDf$date))[testDf$date]
+graph2 <- testDf%>%mutate(daysSinceDecember312019 = as.numeric(floor((difftime(testDf$date, min(testDf$date))/86400 )) ))
 
 
 
 
 
-graph <- test%>%mutate(daysSinceDecember312019 = as.numeric(floor((difftime(test$date, min(test$date))/86400 )) ))
+
+
 
 ```
 
@@ -109,3 +126,24 @@ finalDeathRate
 ```
 
 This is a lot more accuracte to today's numbers (Again note that this data accounts for cases only up until April 5th, 2020. )
+
+
+
+Finally, below, we wanted to explore the growth rates while comparing the COVID-19 tests and the number of cases. First, we have a graph showing the exponetial explosion of total tests and total cases during the pandemic. 
+
+```{r}
+#tests vs cases
+
+ggplot(data = graph2, aes(x = daysSinceDecember312019))  +  geom_point(aes(y = as.integer(totalCases), color = "Total Cases"))  +geom_point(aes(y = as.integer(totalTests), color = "Total tests")) 
+```
+This goes to show just how much testing has been done so far. Although these are failry large numbers, testing still needs to dramatically increase. 
+
+
+Below, we have another graph, this time a bar chart, showing the number of tests per confirmed cases worldwide. For simplicity we are showing the top ten countries. This is an interesting graphic as it shows that these countries have the fewest number of cases per test. 
+```{r}
+#Tests per confirmed case
+country <- data1 %>% group_by(location) %>% summarise(totalCases = sum(total_cases), newCases = sum(new_cases),totalDeaths = sum(total_deaths), totalTests = sum(total_tests) ) %>% mutate(ratio = (as.integer(totalTests)/totalCases)) %>% arrange(desc(ratio))
+
+ggplot(data = head(country, n = 10 ), aes(x = reorder(location, (as.integer(totalTests)/totalCases)), y = (as.integer(totalTests)/totalCases))) + geom_bar(stat = "identity")
+
+```
