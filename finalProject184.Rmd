@@ -206,7 +206,7 @@ ggplot(data = graph2, aes(x = daysSinceDecember312019))  +
 This goes to show just how much testing has been done so far. Although these are failry large numbers, testing still needs to dramatically increase. 
 
 
-Below, we have another graph, this time a bar chart, showing the number of tests per confirmed cases worldwide. For simplicity we are showing the top ten countries. This is an interesting graphic as it shows that these countries have the fewest number of cases per test. 
+Below, we have another graph, this time a bar chart, showing the number of tests per confirmed cases worldwide. For simplicity we are showing the top ten countries. This is an interesting graphic as it shows that these countries have the fewest number of cases per test..
 <br>
 
 ## Figure #8
