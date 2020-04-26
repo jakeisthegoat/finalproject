@@ -2,6 +2,8 @@
 title: "STAT 184 Final Project: Matt Bubb and Jacob Adams"
 output: html_notebook
 ---
+
+
 ## Research idea: Expondential Growth and the Novel Coronavirus
 
 #### Our final project is based around the concept of exponential growth when applied to the Novel Coronavirus (COVID-19). Although our main idea is not surrounded by a question, we have explored many sub-questions related to the topic in which we can draw trivial commonalities between the Coronavirus and exponential growth. Our research topics are listed below in our figure listings.  
@@ -38,12 +40,14 @@ data2 <- read.csv("full_data.csv")
 
 # Data Inspection
 ## First Dataset
+###### Data URL: https://ourworldindata.org/coronavirus-source-data
 ```{r}
 head(data2)
 ```
 <br>
 
 ## Second Dataset
+###### Data URL: https://ourworldindata.org/coronavirus#licence
 ```{r}
 head(data1)
 ```
@@ -123,7 +127,7 @@ We can see here that the number of total deaths is, unfortunately, exponential. 
 <br>
 
 ## Figure #4
-Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, we have have code to see how fast the growing number of cases doubles. 
+Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, we have written a function to calculate on average, the number of days it takes for the total amount of cases to double. 
 
 ```{r}
 totalCasesColumn <- rev(casesDf$totalCases)
