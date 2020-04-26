@@ -201,7 +201,9 @@ Finally, below, we wanted to explore the growth rates while comparing the COVID-
 
 ggplot(data = graph2, aes(x = daysSinceDecember312019))  +
   geom_point(aes(y = as.integer(totalCases), color = "Total Cases"))  +
-  geom_point(aes(y = as.integer(totalTests), color = "Total tests")) 
+  geom_point(aes(y = as.integer(totalTests), color = "Total Tests")) +
+  ggtitle("Tests vs Cases") + 
+  xlab("Total Days of Pandemic") + ylab("Number") + labs(color = "Legend" )
 ```
 This goes to show just how much testing has been done so far. Although these are failry large numbers, testing still needs to dramatically increase. 
 
@@ -219,5 +221,7 @@ country <- data1 %>%
   arrange(desc(ratio))
 
 ggplot(data = head(country, n = 10 ), aes(x = reorder(location, (as.integer(totalTests)/totalCases)), y = (as.integer(totalTests)/totalCases))) + 
-  geom_bar(stat = "identity")
+  geom_bar(stat = "identity") +
+  ggtitle("Tests per Case") + 
+  xlab("Countries") + ylab("Percent of Testing Available") + labs(color = "Legend" )
 ```
