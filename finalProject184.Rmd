@@ -14,8 +14,6 @@ output: html_notebook
 <br/> 
 
 
-
-
 ```{r}
 rm(list = ls())
 
