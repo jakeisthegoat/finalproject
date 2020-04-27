@@ -252,7 +252,7 @@ graphUS <-
 
 ggplot(data = graphUS, aes(daysSinceDecember312019)) +  
   geom_point(aes(y = totalCases, color = "Total Cases")) +
-  geom_smooth(aes(y = totalDeaths)) +
+  geom_smooth(aes(y = totalDeaths, color = "Total Deaths")) +
   ggtitle("Cases in United States") + 
   
   xlab("Days") + ylab("Cases") + labs(color = "Legend" )
