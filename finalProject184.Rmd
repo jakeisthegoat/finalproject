@@ -18,7 +18,7 @@ Figure 3: How does the total deaths from COVID-19 relate to the number of new de
 <br>
 Figure 4: Since we are intersted in exponential growth, what is the average number of days it takes for the total number of COVID-19 cases to double in the world?
 <br>
-Figure 5: Which countries have the highest death rate per 100 people?
+Figure 5: Which countries have the highest death rate per 100 people; are these numbers growing exponentially?
 <br>
 Figure 6: This is an addition to Figure 5, as we added another parameter to the problem. 
 <br>
@@ -127,7 +127,7 @@ We can see here that the number of total deaths is, unfortunately, exponential. 
 <br>
 
 ## Figure #4
-Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, we have written a function to calculate on average, the number of days it takes for the total amount of cases to double. 
+Up next, we are interested to see how often the total number of cases around the world doubles. As the most common form of exponential growth $f(x) = 2^x$, grows at an incredible rate and in the case of the Coronavirus, the number of cases could grow incredibly fast. Below, we have written a user defined function to calculate on average, the number of days it takes for the total amount of cases to double. 
 
 ```{r}
 totalCasesColumn <- rev(casesDf$totalCases)
