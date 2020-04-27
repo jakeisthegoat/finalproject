@@ -247,9 +247,6 @@ graphUS <-
   filter(daysSinceDecember312019 > 60)
 
 ggplot(data = graphUS, aes(daysSinceDecember312019)) +  
-  geom_point(aes(y = newCases, color = "New Cases")) + 
-  geom_point(aes(y = newDeaths, color = "New Deaths")) +
-  geom_point(aes(y = totalDeaths, color = "Total Deaths")) +
   geom_point(aes(y = totalCases, color = "Total Cases")) + 
   ggtitle("Cases in United States", subtitle = "Since December*") + 
   xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
