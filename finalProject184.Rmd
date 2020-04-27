@@ -26,6 +26,9 @@ Figure 7: Has the number of tests grown exponentially with the number of confirm
 <br>
 Figure 8: Tests per confirmed cases.
 <br>
+Figure 9: Taking look at the exponential growth in the U.S over the past month.
+<br>
+
 
 ```{r}
 rm(list = ls())
@@ -231,6 +234,7 @@ ggplot(data = head(country, n = 10 ), aes(x = reorder(location, (as.integer(tota
 Here, we have another graph, this time a bar chart, showing the number of tests per confirmed cases worldwide. For simplicity we are showing the top ten countries. This is an interesting graphic as it shows that these countries have the fewest number of cases per test.
 <br>
 
+## Figure #9
 ```{r}
 casesUS <- 
 data2 %>% 
@@ -247,7 +251,13 @@ graphUS <-
   filter(daysSinceDecember312019 > 60)
 
 ggplot(data = graphUS, aes(daysSinceDecember312019)) +  
-  geom_point(aes(y = totalCases, color = "Total Cases")) + 
-  ggtitle("Cases in United States", subtitle = "Since December*") + 
-  xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
+  geom_point(aes(y = totalCases, color = "Total Cases")) +
+  geom_smooth(aes(y = totalDeaths)) +
+  ggtitle("Cases in United States") + 
+  
+  xlab("Days") + ylab("Cases") + labs(color = "Legend" )
 ```
+
+This graph demonstrates the exponention growth in the United States within the last 30 + days. We can safe conclude that spread is exponential in the U.S as well.
+<br>
+
