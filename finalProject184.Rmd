@@ -251,5 +251,3 @@ ggplot(data = graphUS, aes(daysSinceDecember312019)) +
   ggtitle("Cases in United States", subtitle = "Since December*") + 
   xlab("Total Days of Pandemic") + ylab("Cases") + labs(color = "Legend" )
 ```
-
-```
